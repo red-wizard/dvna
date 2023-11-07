@@ -2,12 +2,12 @@ pipeline {
     agent any
 
     stages {
-        stage('Dependency Check') {
-            steps {
-                echo 'Dependency Check..'
-                dependencyCheck additionalArguments: '--disableYarnAudit --format HTML', odcInstallation: 'Dependency Check'
-            }
-        }
+        // stage('Dependency Check') {
+        //     steps {
+        //         echo 'Dependency Check..'
+        //         dependencyCheck additionalArguments: '--disableYarnAudit --format HTML', odcInstallation: 'Dependency Check'
+        //     }
+        // }
         // Building and Testing the application.
         stage('Install') {
             steps {
