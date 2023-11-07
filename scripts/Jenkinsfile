@@ -2,9 +2,41 @@ pipeline {
     agent any
 
     stages {
+        stage('Dependency Check') {
+            steps {
+                echo 'Dependency Check..'
+                dependencyCheck additionalArguments: '--disableYarnAudit --format HTML', odcInstallation: 'Dependency Check'
+            }
+        }
+        // Building and Testing the application.
+        stage('Install') {
+            steps {
+                echo 'Install..'
+                sh '''
+                sudo apt-get update
+                sudo apt purge npm -y
+                sudo apt install npm -y
+                sudo docker info
+                '''
+                echo 'necessary updates and installation check completed>>>'
+            }
+        }
         stage('Build') {
             steps {
                 echo 'Building..'
+                sh'''
+                docker rm -f dvna-app | true
+                docker rmi dvna-sne22-rp1 | true
+                '''
+
+                echo 'purged previous build instances!!!'
+                echo 'now building container image>>>'
+
+                sh '''
+                docker build -t dvna-sne22-rp1 -f Dockerfile-dev .
+                '''
+
+                echo 'container image successfully built!'
             }
         }
         stage('Test') {
