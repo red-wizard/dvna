@@ -13,11 +13,10 @@ pipeline {
             steps {
                 echo 'Install..'
                 sh '''
-                echo $USER
                 sudo apt-get update
                 sudo apt purge npm -y
                 sudo apt install npm -y
-                sudo docker info
+                docker info
                 '''
                 echo 'necessary updates and installation check completed>>>'
             }
