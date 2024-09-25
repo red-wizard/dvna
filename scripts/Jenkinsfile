@@ -12,7 +12,7 @@ pipeline {
         stage('Install') {
             steps {
                 echo 'Install..'
-		echo ${USER}
+		echo "${USER}"
                 sh '''
                 sudo apt-get update
                 sudo apt purge npm -y
