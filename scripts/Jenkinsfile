@@ -39,9 +39,15 @@ pipeline {
                 echo 'container image successfully built!'
             }
         }
-        stage('Test') {
+        stage('SonarQube Analysis') {
             steps {
-                echo 'Testing..'
+	    	  script {
+		  	 scannerhome = tool 'node-scanner'
+		  }
+		  withSonarQubeEnv('node-scanner') {
+		    sh "${scannerHome}/bin/sonar-scanner"
+		  }
+		  
             }
         }
         stage('Deploy') {
