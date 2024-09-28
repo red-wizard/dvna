@@ -46,7 +46,6 @@ pipeline {
 		  	 scannerhome = tool 'node-scanner'
 		  }
 		  withSonarQubeEnv('node-scanner') {
-		    "env".execute() | "grep -i sonar".execute()
 		    echo "${scannerHome}/bin/sonar-scanner"
 		    sh "${scannerHome}/bin/sonar-scanner"
 		  }		  
