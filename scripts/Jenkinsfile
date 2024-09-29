@@ -46,8 +46,7 @@ pipeline {
 		  	 scannerHome = tool 'node-scanner'
 		  }
 		  withSonarQubeEnv('Local-SonarQube') {
-		    echo "${scannerHome}/bin/sonar-scanner"
-		    sh "${scannerHome}/bin/sonar-scanner"
+		    sh "${scannerHome}/bin/sonar-scanner -sonar.projectKey=sonar-dvna"
 		  }		  
             }
         }
