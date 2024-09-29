@@ -43,7 +43,7 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
 	    	  script {
-		  	 scannerhome = tool 'local-scanner'
+		  	 scannerhome = tool 'node-scanner'
 		  }
 		  withSonarQubeEnv('Local-SonarQube') {
 		    echo "${scannerHome}/bin/sonar-scanner"
