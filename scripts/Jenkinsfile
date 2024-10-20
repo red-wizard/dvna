@@ -22,24 +22,6 @@ pipeline {
                 echo 'necessary updates and installation check completed>>>'
             }
         }
-        stage('Build') {
-            steps {
-                echo 'Building..'
-                sh'''
-                docker rm -f dvna-app | true
-                docker rmi dvna-sne22-rp1 | true
-                '''
-
-                echo 'purged previous build instances!!!'
-                echo 'now building container image>>>'
-
-                sh '''
-                docker build -t dvna-sne22-rp1 -f Dockerfile-dev .
-                '''
-
-                echo 'container image successfully built!'
-            }
-        }
         stage('SonarQube Analysis') {
             steps {
 	    	  script {
@@ -50,6 +32,63 @@ pipeline {
 		  }		  
             }
         }
+        stage('Build') {
+            steps {
+                echo 'Building..'
+                sh'''
+                docker rm -f dvna-app | true
+                docker rmi dvna-red-wizard | true
+                '''
+
+                echo 'purged previous build instances!!!'
+                echo 'now building container image>>>'
+
+                sh '''
+                docker build -t dvna-red-wizard -f Dockerfile-dev .
+                '''
+
+                echo 'container image successfully built!'
+            }
+        }
+
+    
+        // Testing the container run-time
+        stage('Test') {
+            steps {
+                sh 'sudo docker-compose -f docker-compose-build.yml up -d'
+                echo 'application started'
+            }
+        }
+       // Pushing application and it's artifacts to container repository
+       stage('Push') {
+            steps {
+                echo 'now pushing working image to dockerhub...'
+
+		withVault(configuration: [disableChildPoliciesOverride: false, skipSslVerification: true, timeout: 60, vaultCredentialId: 'docker', vaultUrl: 'http://10.1.1.199:8200'], vaultSecrets: [[path: 'stellar.lab/data/dockerhub/login/myrddinw', secretValues: [[vaultKey: 'password']]]]) {
+                sh '''
+                docker login -u myrddinw  -p $password docker.io
+                docker tag dvna-red-wizard myrddinw/dvna-red-wizard:1.4
+                docker push myrddinw/dvna-red-wizard:1.4
+                '''
+
+}
+        
+                echo 'container image push was successfull>>>'
+           }
+       }
+       
+    
+    // Deleting the container from the jenkins agent node
+    stage('Cleanup') {
+      steps {
+        echo 'initializing test server cleanup...'
+        sh 'sudo docker-compose -f docker-compose-build.yml down'
+        echo 'removed container runtime'
+        sh 'docker image prune -a'
+        echo 'removed docker image!!!'
+      } 
+    } 
+  }
         stage('Deploy') {
             steps {
                 echo 'Deploying....'
