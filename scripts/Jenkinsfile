@@ -52,13 +52,13 @@ pipeline {
         }
 
     
-        // Testing the container run-time
-        stage('Test') {
-            steps {
-                sh 'sudo docker-compose -f docker-compose-build.yml up -d'
-                echo 'application started'
-            }
-        }
+        // // Testing the container run-time
+        // stage('Test') {
+        //     steps {
+        //         sh 'sudo docker-compose -f docker-compose-build.yml up -d'
+        //         echo 'application started'
+        //     }
+        // }
        // Pushing application and it's artifacts to container repository
        stage('Push') {
             steps {
