@@ -64,7 +64,7 @@ pipeline {
             steps {
                 echo 'now pushing working image to dockerhub...'
 
-		     withVault(configuration: [disableChildPoliciesOverride: false, skipSslVerification: true, timeout: 60, vaultCredentialId: 'Docker Connections\docker', vaultUrl: 'http://10.1.1.199:8200'], vaultSecrets: [[path: 'stellar.lab/data/dockerhub/login/myrddinw', secretValues: [[vaultKey: 'password']]]]) {
+		     withVault(configuration: [disableChildPoliciesOverride: false, skipSslVerification: true, timeout: 60, vaultCredentialId: 'docker', vaultUrl: 'http://10.1.1.199:8200'], vaultSecrets: [[path: 'stellar.lab/data/dockerhub/login/myrddinw', secretValues: [[vaultKey: 'password']]]]) {
 		     sh '''
 		     docker login -u myrddinw  -p $password docker.io
 		     docker tag dvna-red-wizard myrddinw/dvna-red-wizard:1.4
